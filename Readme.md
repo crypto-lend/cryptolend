@@ -1,3 +1,9 @@
 # Smart contract
 
-Using ENS names as a part of collateral, digital lending pure P2P on ETH
+Digital lending over ETH
+
+## Contract Specs
+
+Check out wiki
+
+## How does it work?
