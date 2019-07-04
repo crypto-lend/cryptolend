@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/upscaletech/finocial.eth#readme",
   "dependencies": {
-    "openzeppelin-solidity": "^2.3.0"
+    "openzeppelin-solidity": "^2.3.0",
+    "truffle-hdwallet-provider": "^1.0.13"
   }
 }
