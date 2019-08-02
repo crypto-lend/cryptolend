@@ -16,14 +16,14 @@ contract Finocial is Ownable, Pausable {
 
     function createNewLoanRequest(uint256 _loanAmount, uint128 _duration,
         uint256 _interest, address _collateralAddress,
-        uint256 _collateralAmount) public returns(address _loanContractAddress) {
+        uint256 _collateralAmount, uint256 _collateralPriceInETH) public returns(address _loanContractAddress) {
 
-            _loanContractAddress = address (new FinocialLoan(_loanAmount, _duration, _interest, _collateralAddress, _collateralAmount, msg.sender, address(0)));
+            _loanContractAddress = address (new FinocialLoan(_loanAmount, _duration, _interest, _collateralAddress, _collateralAmount, _collateralPriceInETH, msg.sender, address(0)));
 
             loans.push(_loanContractAddress);
 
             emit LoanContractCreated(msg.sender, _loanContractAddress);
-            
+
             return _loanContractAddress;
     }
 
