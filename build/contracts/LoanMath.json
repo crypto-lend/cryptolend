@@ -1,14 +1,15 @@
 {
   "contractName": "LoanMath",
   "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820182c5d9e1aaa37ba8a452476dbd16f85cf1ea308ef0d152c42fa0322095f077c0029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820182c5d9e1aaa37ba8a452476dbd16f85cf1ea308ef0d152c42fa0322095f077c0029",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.0+commit.1d4f565a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/home/d/finocial.eth/contracts/libs/LoanMath.sol\":\"LoanMath\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/d/finocial.eth/contracts/libs/LoanMath.sol\":{\"keccak256\":\"0x6124ba15b6eac85ca0ce63b264f5e0591aa5df252d4883b1fd9b57bd291b6a59\",\"urls\":[\"bzzr://d23218174992dbc700965fa53f7489af4591d28b31a39151a94367e68caa5b47\"]},\"openzeppelin-solidity/contracts/math/SafeMath.sol\":{\"keccak256\":\"0x4ccf2d7b51873db1ccfd54ca2adae5eac3b184f9699911ed4490438419f1c690\",\"urls\":[\"bzzr://1604f5b6d6e916c154efd8c6720cda069e5ba32dfa0a9dedf2b42e5b02d07f89\"]}},\"version\":1}",
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058202aecc6f9aa4d1919748eaefa2a90a6429373970729f45cb460cadec574aa913c0029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a723058202aecc6f9aa4d1919748eaefa2a90a6429373970729f45cb460cadec574aa913c0029",
   "sourceMap": "86:2601:7:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
   "deployedSourceMap": "86:2601:7:-;;;;;;;;",
   "source": "pragma solidity ^0.5.0;\n\nimport \"openzeppelin-solidity/contracts/math/SafeMath.sol\";\n\nlibrary LoanMath {\n\n    using SafeMath for uint256;\n\n    uint256 constant DECIMAL_PLACES = 4;\n\n    function getRepaymentNumber(\n        uint256 loanStartDate,\n        uint128 duration) view internal\n        returns(\n            uint256 repaymentNumber) {\n\n        uint256 currentLoanDuration = now.sub(loanStartDate).div(1 minutes);\n\n        if( currentLoanDuration <= duration ){\n            repaymentNumber = currentLoanDuration.div(10).add(1);\n            return repaymentNumber;\n        } else {\n            return (0);\n        }\n    }\n\n    function getAverageMonthlyInterest(uint256 principal, uint256 interestRate, uint256 totalRepayments) pure internal returns(uint256 interest){\n        return (principal.mul(interestRate)).mul(totalRepayments.add(1)).div(totalRepayments.mul(10**DECIMAL_PLACES).mul(2));\n    }\n\n    function getPlatformFeeAmount(uint256 principal, uint256 platformFeeRate) pure internal returns(uint256 fees) {\n        return  (principal.mul(platformFeeRate)).div(10**DECIMAL_PLACES);\n    }\n\n    function calculateRepaymentAmount(uint256 principal, uint256 interest, uint256 fees, uint256 duration) pure internal returns(uint256 amount) {\n        uint256 totalRepayments = getTotalNumberOfRepayments(duration);\n        amount = principal.div(totalRepayments).add(interest.add(fees));\n        return amount;\n    }\n\n    function calculateTotalLoanRepaymentAmount(uint256 principal, uint256 interestRate, uint256 platformFeeRate, uint256 duration) pure internal returns(uint256) {\n        uint256 totalRepayments = getTotalNumberOfRepayments(duration);\n        uint256 interest = (principal.mul(interestRate)).mul(totalRepayments.add(1)).div((10**DECIMAL_PLACES).mul(2));\n        uint256 fees = getPlatformFeeAmount(principal,platformFeeRate);\n        return principal.add(interest.add(fees));\n    }\n\n    function getTotalNumberOfRepayments(uint256 duration) pure internal returns(uint256 totalRepaymentsNumber) {\n        totalRepaymentsNumber = uint256(duration).div(10);\n        return totalRepaymentsNumber;\n    }\n\n    function getRemainingRepaymentAmount(uint256 totalRepaymentAmount, uint256 repaidAmount) pure internal returns(uint256) {\n        return totalRepaymentAmount.sub(repaidAmount);\n    }\n\n    function calculateCollateralAmountToDeduct(uint256 remainingAmount, uint256 collateralValue) pure internal returns(uint256) {\n        return remainingAmount.div(collateralValue);\n    }\n\n    function getTotalCollateralValue(uint256 collateralPrice, uint256 collateralAmount) pure internal returns(uint256) {\n        return collateralAmount.mul(collateralPrice);\n    }\n\n}\n",
-  "sourcePath": "/Users/anurag/Workspace/finocial.eth/contracts/libs/LoanMath.sol",
+  "sourcePath": "/home/d/finocial.eth/contracts/libs/LoanMath.sol",
   "ast": {
-    "absolutePath": "/Users/anurag/Workspace/finocial.eth/contracts/libs/LoanMath.sol",
+    "absolutePath": "/home/d/finocial.eth/contracts/libs/LoanMath.sol",
     "exportedSymbols": {
       "LoanMath": [
         1611
@@ -3644,7 +3645,7 @@
     "src": "0:2688:7"
   },
   "legacyAST": {
-    "absolutePath": "/Users/anurag/Workspace/finocial.eth/contracts/libs/LoanMath.sol",
+    "absolutePath": "/home/d/finocial.eth/contracts/libs/LoanMath.sol",
     "exportedSymbols": {
       "LoanMath": [
         1611
@@ -7284,8 +7285,8 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.5",
-  "updatedAt": "2019-08-02T04:47:57.083Z",
+  "schemaVersion": "3.0.11",
+  "updatedAt": "2019-08-07T10:00:43.885Z",
   "devdoc": {
     "methods": {}
   },
