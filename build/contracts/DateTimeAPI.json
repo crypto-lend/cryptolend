@@ -1,0 +1,103 @@
+{
+  "contractName": "DateTimeAPI",
+  "abi": [],
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3fe6080604052600080fdfea165627a7a72305820dea87836cfdf8824ba99f71bf506d04ae5552c5529f66d5ed83a479bf9c93dbe0029",
+  "deployedBytecode": "0x6080604052600080fdfea165627a7a72305820dea87836cfdf8824ba99f71bf506d04ae5552c5529f66d5ed83a479bf9c93dbe0029",
+  "sourceMap": "26:1193:6:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:1193:6;;;;;;;",
+  "deployedSourceMap": "26:1193:6:-;;;;;",
+  "source": "pragma solidity ^0.5.0;\n\n\ncontract DateTimeAPI {\n        /*\n         *  Abstract contract for interfacing with the DateTime contract.\n         *\n         */\n        // function isLeapYear(uint16 year) constant returns (bool);\n        // function getYear(uint timestamp) constant returns (uint16);\n        // function getMonth(uint timestamp) constant returns (uint8);\n        // function getDay(uint timestamp) constant returns (uint8);\n        // function getHour(uint timestamp) constant returns (uint8);\n        // function getMinute(uint timestamp) constant returns (uint8);\n        // function getSecond(uint timestamp) constant returns (uint8);\n        // function getWeekday(uint timestamp) constant returns (uint8);\n        // function toTimestamp(uint16 year, uint8 month, uint8 day) constant returns (uint timestamp);\n        // function toTimestamp(uint16 year, uint8 month, uint8 day, uint8 hour) constant returns (uint timestamp);\n        // function toTimestamp(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute) constant returns (uint timestamp);\n        // function toTimestamp(uint16 year, uint8 month, uint8 day, uint8 hour, uint8 minute, uint8 second) constant returns (uint timestamp);\n}\n",
+  "sourcePath": "/Users/anurag/Workspace/finocial.eth/contracts/libs/DateTime/api.sol",
+  "ast": {
+    "absolutePath": "/Users/anurag/Workspace/finocial.eth/contracts/libs/DateTime/api.sol",
+    "exportedSymbols": {
+      "DateTimeAPI": [
+        1347
+      ]
+    },
+    "id": 1348,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1346,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:6"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1347,
+        "linearizedBaseContracts": [
+          1347
+        ],
+        "name": "DateTimeAPI",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 1348,
+        "src": "26:1193:6"
+      }
+    ],
+    "src": "0:1220:6"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/anurag/Workspace/finocial.eth/contracts/libs/DateTime/api.sol",
+    "exportedSymbols": {
+      "DateTimeAPI": [
+        1347
+      ]
+    },
+    "id": 1348,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 1346,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:6"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 1347,
+        "linearizedBaseContracts": [
+          1347
+        ],
+        "name": "DateTimeAPI",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 1348,
+        "src": "26:1193:6"
+      }
+    ],
+    "src": "0:1220:6"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.0.5",
+  "updatedAt": "2019-08-02T04:47:57.083Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
