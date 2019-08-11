@@ -7,7 +7,7 @@ library LoanMath {
     using SafeMath for uint256;
 
     uint256 constant DECIMAL_PLACES = 4;
-    uint256 constant TWO = 2;
+    uint256 constant REPAYMENT_CYCLE_DURATION = 30;
 
     function getRepaymentNumber(
         uint256 loanStartDate,
@@ -18,24 +18,26 @@ library LoanMath {
         uint256 currentLoanDuration = now.sub(loanStartDate).div(1 minutes);
 
         if( currentLoanDuration <= duration ){
-            repaymentNumber = currentLoanDuration.div(10).add(1);
+            repaymentNumber = currentLoanDuration.div(REPAYMENT_CYCLE_DURATION).add(1);
             return repaymentNumber;
         } else {
             return (0);
         }
     }
 
-    function getAverageMonthlyInterest(uint256 principal, uint256 interestRate, uint256 totalRepayments) pure internal returns(uint256 interest){
-        return (principal.mul(interestRate)).mul(totalRepayments.add(1)).div(totalRepayments.mul(10**DECIMAL_PLACES).mul(2));
+    function getAverageMonthlyInterest(uint256 principal, uint256 interestRate, uint256 totalLoanRepayments) pure internal returns(uint256){
+        return (principal.mul(interestRate)).mul(totalLoanRepayments.add(1)).div(totalLoanRepayments.mul(10**DECIMAL_PLACES).mul(2));
     }
 
     function getPlatformFeeAmount(uint256 principal, uint256 platformFeeRate) pure internal returns(uint256 fees) {
         return  (principal.mul(platformFeeRate)).div(10**DECIMAL_PLACES);
     }
 
-    function calculateRepaymentAmount(uint256 principal, uint256 interest, uint256 fees, uint256 duration) pure internal returns(uint256 amount) {
-        uint256 installment = ((principal.mul(interest).mul((duration.div(30)).add(1))).div(TWO.mul(duration.div(30)).mul(100))).add(principal.div(duration.div(30)));
-        return installment.add(fees);
+    function calculateRepaymentAmount(uint256 principal, uint256 monthlyInterest, uint256 fees, uint256 totalLoanRepayments) pure internal returns(uint256 amount) {
+
+        amount = principal.div(totalLoanRepayments).add(monthlyInterest.add(fees));
+
+        return amount;
     }
 
     function calculateTotalLoanRepaymentAmount(uint256 principal, uint256 interestRate, uint256 platformFeeRate, uint256 duration) pure internal returns(uint256) {
@@ -47,7 +49,7 @@ library LoanMath {
     }
 
     function getTotalNumberOfRepayments(uint256 duration) pure internal returns(uint256 totalRepaymentsNumber) {
-        totalRepaymentsNumber = uint256(duration).div(10);
+        totalRepaymentsNumber = uint256(duration).div(REPAYMENT_CYCLE_DURATION);
         return totalRepaymentsNumber;
     }
 
