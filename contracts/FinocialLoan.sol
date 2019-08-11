@@ -135,10 +135,20 @@ contract FinocialLoan {
     function getLoanData() view public returns (
         uint256 _loanAmount, uint128 _duration, uint256 _interest, uint256 startedOn, LoanStatus _loanStatus,
         address _collateralAddress, uint256 _collateralAmount, uint256 _collateralPrice, CollateralStatus _collateralStatus,
-        address _borrower, address _lender) {
+        address _borrower, address _lender, uint256 amount, uint256 fees, uint256 repaymentNumber) {
+
+        repaymentNumber = LoanMath.getRepaymentNumber(loan.startedOn, loan.duration);
+        uint256 totalRepayments = LoanMath.getTotalNumberOfRepayments(loan.duration);
+        uint256 interest = LoanMath.getAverageMonthlyInterest(loan.loanAmount, loan.interestRate, totalRepayments);
+        if(repaymentNumber == 1)
+            fees = LoanMath.getPlatformFeeAmount(loan.loanAmount, PLATFORM_FEE_RATE);
+        else
+            fees = 0;
+        amount = LoanMath.calculateRepaymentAmount(loan.loanAmount, loan.interestRate, fees, loan.duration);
+
         return (loan.loanAmount, loan.duration, loan.interestRate, loan.startedOn, loan.loanStatus,
             loan.collateral.collateralAddress, loan.collateral.collateralAmount,
-            loan.collateral.collateralPrice, loan.collateral.collateralStatus, loan.borrower, loan.lender);
+            loan.collateral.collateralPrice, loan.collateral.collateralStatus, loan.borrower, loan.lender, amount, fees, repaymentNumber);
     }
 
     function getRepaymentAmount() view public returns(uint256 amount, uint256 fees, uint256 repaymentNumber){
@@ -150,7 +160,7 @@ contract FinocialLoan {
             fees = LoanMath.getPlatformFeeAmount(loan.loanAmount, PLATFORM_FEE_RATE);
         else
             fees = 0;
-        amount = LoanMath.calculateRepaymentAmount(loan.loanAmount, interest, fees, loan.duration);
+        amount = LoanMath.calculateRepaymentAmount(loan.loanAmount, loan.interestRate, fees, loan.duration);
         return (amount, fees, repaymentNumber);
     }
 

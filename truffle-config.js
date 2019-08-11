@@ -19,10 +19,10 @@
  */
 
 const HDWalletProvider = require('truffle-hdwallet-provider');
-const infuraKey = "fj4jll3k.....";
+const infuraKey = "https://ropsten.infura.io/v3/85cd51d894114cc98fee9a109fe171ec";
 //
 const fs = require('fs');
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+const mnemonic = 'month spatial toy inmate stumble crime pen april sentence orange clutch unaware';
 
 module.exports = {
   /**
