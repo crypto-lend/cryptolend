@@ -61,7 +61,7 @@ contract FinocialLoan {
         uint256 repaymentNumber;
     }
 
-    Repayment[] public repayments;
+    uint256[] public repayments;
 
     event CollateralTransferToLoanFailed(address, uint256);
     event CollateralTransferToLoanSuccessful(address, uint256);
@@ -150,6 +150,10 @@ contract FinocialLoan {
       return repayments.length;
     }
 
+    function getAllPaidRepayments() view public returns(uint256[] memory){
+      return repayments;
+    }
+
     function getCurrentRepaymentNumber() view public returns(uint256) {
       return LoanMath.getRepaymentNumber(loan.startedOn, loan.duration);
     }
@@ -190,7 +194,7 @@ contract FinocialLoan {
         if(loan.outstandingAmount <= 0)
             loan.loanStatus = LoanStatus.REPAID;
 
-        repayments.push(Repayment(now, msg.value, repaymentNumber));
+        repayments.push(repaymentNumber);
 
         address(uint160(loan.lender)).transfer(toTransfer);
 
