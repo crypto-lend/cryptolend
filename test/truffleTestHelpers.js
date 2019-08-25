@@ -1,3 +1,12 @@
+const web3 = require('web3');
+
+
+provider = async() => {
+  return web3.givenProvider;
+}
+
+
+
 advanceTimeAndBlock = async (time) => {
     await advanceTime(time);
     await advanceBlock();
@@ -37,5 +46,6 @@ advanceBlock = () => {
 module.exports = {
     advanceTime,
     advanceBlock,
-    advanceTimeAndBlock
+    advanceTimeAndBlock,
+    provider
 }
