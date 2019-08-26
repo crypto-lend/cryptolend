@@ -1,3 +1,18 @@
+/*
+    Copyright 2019 Finocial IO
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+*/
 pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
@@ -47,7 +62,7 @@ contract LoanContract {
         uint256 createdOn;
         uint256 startedOn;
        // uint256 outstandingAmount;
-        uint256[] repayments;
+        //uint256[] repayments;
         address borrower;
         address lender;
         LoanStatus loanStatus;
@@ -70,6 +85,7 @@ contract LoanContract {
     uint256 public remainingCollateralAmount = 0;
 
     /* struct Repayment {
+        bytes32 id;
         uint256 repaidOn;
         uint256 amount;
         uint256 repaymentNumber;
@@ -157,7 +173,7 @@ contract LoanContract {
         require(loan.loanStatus == LoanStatus.FUNDED, "Incorrect loan status");
         loan.borrower = msg.sender;
         /* This will call setters and enrich loan data */
-        this.enrichLoan(_interestRate,_collateralAddress,_collateralAmount, _collateralPriceInETH,_ltv);
+        enrichLoan(_interestRate,_collateralAddress,_collateralAmount, _collateralPriceInETH,_ltv);
 
         // borrower should transfer collateral after this. use same above method? YES (validation done)
         // to be done in UI
@@ -193,9 +209,9 @@ contract LoanContract {
             loan.borrower, loan.lender);
     }
 
-    function getPaidRepaymentsCount() view public returns (uint256) {
+    /* function getPaidRepaymentsCount() view public returns (uint256) {
       return loan.repayments.length;
-    }
+    } */
 
     /* function getAllPaidRepayments() view public returns(uint256[] memory){
       return loan.repayments;
@@ -222,7 +238,7 @@ contract LoanContract {
     }
 
     // this func to be called when any repayment due date is passed
-    function makeFailedRepayments() view internal {
+    function makeFailedRepayments() external payable {
     // UI checks if anytime now > due date of repayment n
     uint256 totalLoanRepayments = LoanMath.getTotalNumberOfRepayments(loan.duration);
 
@@ -236,12 +252,12 @@ contract LoanContract {
     }
 
      // cheks if repayment n was added in paid repayments array
-    bool wasPaid = loan.repayments[repaymentNumber]; // update formulae
+    bool wasPaid = repayments[repaymentNumber]; // update formulae
     if(!wasPaid)
     {
         // initates transfer according to repayment amount and current value of collateral1
         (uint256 _repayAmount,,uint256 fees) = getRepaymentAmount(repaymentNumber);
-         uint256 collateralAmountToTrasnfer = LoanMath.calculateCollateralAmountToDeduct((_repayAmount.sub(fees)).mul(SOME_THINGS.divide(100)), loan.collateral.collateralPrice);
+         uint256 collateralAmountToTrasnfer = LoanMath.calculateCollateralAmountToDeduct((_repayAmount.sub(fees)).mul(SOME_THINGS.div(100)), loan.collateral.collateralPrice);
          ERC20 = IERC20(loan.collateral.collateralAddress);
          ERC20.transfer(loan.lender, collateralAmountToTrasnfer);
          emit CollateralSentToLenderForDefaultedRepayment(repaymentNumber,loan.lender,collateralAmountToTrasnfer);
@@ -269,7 +285,7 @@ contract LoanContract {
       //  if(loan.outstandingAmount <= 0)
       //      loan.loanStatus = LoanStatus.REPAID;
 
-        loan.repayments[repaymentNumber] = true;
+        repayments[repaymentNumber] = true;
 
         address(uint160(loan.lender)).transfer(toTransfer);
 

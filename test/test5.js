@@ -1,5 +1,5 @@
-var Finocial = artifacts.require("./BLoanCreatorNew.sol");
-var FinocialLoan = artifacts.require("./BLoanContract.sol");
+var Finocial = artifacts.require("./LoanContract.sol");
+var FinocialLoan = artifacts.require("./LoanCreator.sol");
 const helper = require("./truffleTestHelpers");
 const web3 = require('web3');
 
