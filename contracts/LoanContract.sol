@@ -10,6 +10,7 @@ contract LoanContract {
 
     uint256 constant PLATFORM_FEE_RATE = 100;
     address constant WALLET_1 = 0x88347aeeF7b66b743C46Cb9d08459784FA1f6908;
+    uint256 constant SOME_THINGS = 105;
 
     enum LoanStatus {
         OFFER,
@@ -68,11 +69,13 @@ contract LoanContract {
 
     uint256 public remainingCollateralAmount = 0;
 
-    struct Repayment {
+    /* struct Repayment {
         uint256 repaidOn;
         uint256 amount;
         uint256 repaymentNumber;
-    }
+    } */
+
+    mapping (uint256 => bool) internal repayments;
 
 
 
@@ -194,9 +197,9 @@ contract LoanContract {
       return loan.repayments.length;
     }
 
-    function getAllPaidRepayments() view public returns(uint256[] memory){
+    /* function getAllPaidRepayments() view public returns(uint256[] memory){
       return loan.repayments;
-    }
+    } */
 
     function getCurrentRepaymentNumber() view public returns(uint256) {
       return LoanMath.getRepaymentNumber(loan.startedOn, loan.duration);
@@ -238,7 +241,7 @@ contract LoanContract {
     {
         // initates transfer according to repayment amount and current value of collateral1
         (uint256 _repayAmount,,uint256 fees) = getRepaymentAmount(repaymentNumber);
-         uint256 collateralAmountToTrasnfer = LoanMath.calculateCollateralAmountToDeduct((_repayAmount.sub(fees)).mul(1.05), loan.collateral.collateralPrice);
+         uint256 collateralAmountToTrasnfer = LoanMath.calculateCollateralAmountToDeduct((_repayAmount.sub(fees)).mul(SOME_THINGS.divide(100)), loan.collateral.collateralPrice);
          ERC20 = IERC20(loan.collateral.collateralAddress);
          ERC20.transfer(loan.lender, collateralAmountToTrasnfer);
          emit CollateralSentToLenderForDefaultedRepayment(repaymentNumber,loan.lender,collateralAmountToTrasnfer);
@@ -266,7 +269,7 @@ contract LoanContract {
       //  if(loan.outstandingAmount <= 0)
       //      loan.loanStatus = LoanStatus.REPAID;
 
-        loan.repayments.push(repaymentNumber);
+        loan.repayments[repaymentNumber] = true;
 
         address(uint160(loan.lender)).transfer(toTransfer);
 
