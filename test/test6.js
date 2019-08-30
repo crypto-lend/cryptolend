@@ -10,7 +10,7 @@
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
 *
-* The above copyright notice and this permission notice shall be included in all
+* The above copyright notice ad this permission notice shall be included in all
 * copies or substantial portions of the Software.
 *
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -21,17 +21,27 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-var Finocial = artifacts.require('./Finocial.sol');
-var StandardToken = artifacts.require('./StandardToken.sol');
-var PriceFeeder = artifacts.require('./PriceFeeder.sol');
-module.exports = async function(deployer, network, accounts) {
+Oracle = artifacts.require("./External/PriceFeeder.sol");
+contract("Provable API query", function(accounts){
+  var admin = accounts[0];
 
-  deployer.deploy(Finocial);
-  deployer.deploy(PriceFeeder);
+  describe("Get Price From API", ()=> {
+    var oracle;
 
-  /**
-  * below deployment should be only for Development
-  */
-  const standardToken = await deployer.deploy(StandardToken, "Test Tokens", "TTT", 18, 10000000000);
+    before('Initialize and Deploy SmartContracts', async () => {
+      oracle = await Oracle.new();
+    });
 
-}
+    it('should create new loan offer and return loan contract address', async() => {
+      var receipt = await oracle.updatePrice( "0x0d8775f648430679a709e98d2b0cb6250d2887ef", {
+        from: admin,
+        gas: 3000000
+      });
+
+      oracleContractAddress = receipt.logs[0].args[1];
+
+      assert.notEqual(oracleContractAddress, 0x0, "Oracle wasnt created correctly");
+
+    });
+  })
+})
