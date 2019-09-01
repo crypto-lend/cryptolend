@@ -57,7 +57,7 @@ contract PriceFeeder is usingProvable {
       require(msg.sender == provable_cbAddress());
       //update(); // Recursively update the price stored in the contract...
       price = _result;
-      emit LogNewPrice(priceETHXBT);
+      emit LogNewPrice(price);
   }
 
   function update(string memory _contractAddress)
