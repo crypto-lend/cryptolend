@@ -22,9 +22,9 @@
 * SOFTWARE.
 */
 
-pragma solidity ^0.5.0;
+pragma solidity >= 0.5.0 < 0.6.0;
 
-import "./ProvableI.sol";
+import "./provableAPI.sol";
 
 /**
 *This contract gets the price from Given URL , and transform the price and sends its back to asking method

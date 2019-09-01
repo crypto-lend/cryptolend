@@ -23,6 +23,7 @@
   "dependencies": {
     "make-license": "^0.5.1",
     "openzeppelin-solidity": "^2.3.0",
+    "solidity-coverage": "^0.6.4",
     "truffle-hdwallet-provider": "^1.0.13"
   }
 }
