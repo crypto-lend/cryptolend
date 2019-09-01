@@ -35,23 +35,41 @@ import "./ProvableI.sol";
 
 contract PriceFeeder is usingProvable {
 
-   bytes32 price;
-   event LogPriceUpdated(string price);
-   event LogNewProvableQuery(string description);
+  string public price;
 
+  event LogNewProvableQuery(string description);
+  event LogNewPrice(string price);
 
-   function updatePrice(string memory _contractAddress) payable public returns(bytes32) {
-     // We could check and validate contract address but as of now we have left it out.
-     // We can do it like this ERC20 = IERC20(address);
+  constructor()
+      public
+  {
+      provable_setProof(proofType_Android | proofStorage_IPFS);
 
-       if (provable_getPrice("URL") > address(this).balance) {
-           emit LogNewProvableQuery("Provable query was NOT sent, please add some ETH to cover for the query fee");
-       } else {
-          emit LogNewProvableQuery("Provable query was sent, standing by for the answer..");
-           string memory url = strConcat("json(https://api.coingecko.com/api/v3/coins/ethereum/contract/", _contractAddress, ").market_data.current_price.usd");
-           bytes32 value = provable_query("URL",url);
-           price = value;
-           return price;
-       }
-   }
+  }
+
+  function __callback(
+      bytes32 _myid,
+      string memory _result,
+      bytes memory _proof
+  )
+      public
+  {
+      require(msg.sender == provable_cbAddress());
+      //update(); // Recursively update the price stored in the contract...
+      price = _result;
+      emit LogNewPrice(priceETHXBT);
+  }
+
+  function update(string memory _contractAddress)
+      public
+      payable
+  {
+      if (provable_getPrice("URL") > address(this).balance) {
+          emit LogNewProvableQuery("Provable query was NOT sent, please add some ETH to cover for the query fee!");
+      } else {
+          emit LogNewProvableQuery("Provable query was sent, standing by for the answer...");
+          string memory url = strConcat("json(https://api.coingecko.com/api/v3/coins/ethereum/contract/", _contractAddress, ").market_data.current_price.usd");
+          provable_query("URL",url);
+      }
+  }
 }
