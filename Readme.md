@@ -45,3 +45,12 @@ truffle(develop)> test
 The most convenient way to run tests with coverage enabled is to run them with help of Docker orchestration. This ensures, that the coverage results will match the ones on Travis CI.
 
 We are working on it.
+
+
+## Contribution
+
+Want to hack on Finocial Protocol? Awesome!
+
+Finocial Protocol is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
+
+Ready to jump in? Check docs.finocial.com/#contributing.
