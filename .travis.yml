@@ -17,6 +17,8 @@ env:
 before_install:
   - pwd
   - chmod a+x ./scripts/travis_npm_compile.sh
+  - chmod a+x ./scripts/coverage_setup.sh
+  - chmod a+x ./scripts/coverage_run.sh
   - ./scripts/travis_npm_compile.sh
   - docker-compose up -d
   - docker-compose --version
