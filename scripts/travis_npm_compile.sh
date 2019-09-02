@@ -3,7 +3,7 @@
 # if we are on master and it has a tag, prepare build artifacts for npm package
 if [[ -v TRAVIS_TAG ]]
 then
-  sudo npm install
-  sudo npm install -g truffle
+  npm install
+  npm install -g truffle
   truffle compile --all
 fi
