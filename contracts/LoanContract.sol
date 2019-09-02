@@ -25,6 +25,7 @@ pragma solidity ^0.5.0;
 
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./LoanMath.sol";
 
 contract LoanContract {
