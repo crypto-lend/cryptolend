@@ -16,6 +16,7 @@ env:
 
 before_install:
   - pwd
+  - chmod a+x ./scripts/travis_npm_compile.sh
   - ./scripts/travis_npm_compile.sh
   - docker-compose up -d
   - docker-compose --version
