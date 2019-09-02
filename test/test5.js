@@ -99,6 +99,49 @@ var loanOffer = {
 
     });
 
+    it('should fund loan from the lender side', async() => {
+
+      var lender_previous_balance =  await web3.eth.getBalance(lender);
+
+      var finocialLoan = await FinocialLoan.transferFundsToLoan({
+        from: lender,
+        value: loanOffer.loanAmount,
+        gas: 30000
+    });
+
+    var loan = await finocialLoan.getLoanData.call();
+
+    assert.equal(loan[4], 2, "Loan Contract status is not FUNDED");
+    assert.equal(await web3.eth.getBalance(lender),
+      parseInt(lender_previous_balance) + parseInt(loanOffer.loanAmount),
+      "Correct amount not transferred to loan Contract");
+    assert.equal(loan[12], lender, "Correct lender address not set");
+  });
+
+
+  it('borrower should accept the loan createad by lender', async() => {
+
+    var finocialLoan = await FinocialLoan.acceptLoanOffer({
+
+    })
+  })
+
+  it('borrower should transfer the collateral once accepted the loan', async() => {
+
+    var finocialLoan = await FinocialLoan.transferCollateralToLoan({
+
+    })
+  })
+
+
+  it('borrower makes  first repayment on time', async() => {
+
+    var finocialLoan = await FinocialLoan.repayLoan({
+
+    })
+  })
+
+
   });
 
 

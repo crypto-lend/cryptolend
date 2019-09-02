@@ -182,7 +182,7 @@ contract LoanContract {
         loan.borrower = msg.sender;
         /* This will call setters and enrich loan data */
         enrichLoan(_interestRate,_collateralAddress,_collateralAmount, _collateralPriceInETH,_ltv);
-
+        // We need emit Some event stating borrower has accepted the loanOffer
         // borrower should transfer collateral after this. use same above method? YES (validation done)
         // to be done in UI
     }
