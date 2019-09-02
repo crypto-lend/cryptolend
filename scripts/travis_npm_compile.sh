@@ -4,6 +4,6 @@
 if [[ -v TRAVIS_TAG ]]
 then
   npm install
-  npm install -g truffle
+  npm install -g truffle@5.0.10
   truffle compile --all
 fi

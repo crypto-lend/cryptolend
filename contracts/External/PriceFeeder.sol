@@ -43,7 +43,7 @@ contract PriceFeeder is usingProvable {
   constructor()
       public
   {
-      provable_setProof(proofType_Android | proofStorage_IPFS);
+      
 
   }
 
