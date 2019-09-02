@@ -23,22 +23,13 @@
 */
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./LoanContract.sol";
 
 contract LoanCreator is Ownable, Pausable {
 
   address[] public loans;
-
-  enum LoanStatus {
-        OFFER,
-        REQUEST,
-        ACTIVE,
-        FUNDED,
-        REPAID,
-        DEFAULT
-    }
 
 
  constructor() public {
@@ -49,7 +40,7 @@ contract LoanCreator is Ownable, Pausable {
  event LoanRequestCreated(address, address);
 
  // parameters and attributes will change depending on changes in loancontract
- function createNewLoanOffer(uint256 _loanAmount, uint128 _duration, string memory _acceptedCollateralsMetadata) public returns(address _loanContractAddress) {
+ function createNewLoanOffer(uint256 _loanAmount, uint128 _duration, bytes32 _acceptedCollateralsMetadata) public returns(address _loanContractAddress) {
 
          _loanContractAddress = address (new LoanContract(_loanAmount, _duration, _acceptedCollateralsMetadata, 0, address(0), 0, 0, 0, address(0), msg.sender, LoanContract.LoanStatus.OFFER));
 
