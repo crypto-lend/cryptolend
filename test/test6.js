@@ -21,27 +21,54 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+const Web3 = require('web3')
 Oracle = artifacts.require("./PriceFeeder.sol");
+const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:9545'))
+const { waitForEvent } = require('./truffleTestHelpers')
+
+
 contract("Provable API query", function(accounts){
-  var someone = accounts[0];
+  let pricefrom
+  const gasAmt = 3e6
+  const address = accounts[0]
 
-  describe("Get Price From API", ()=> {
-    var oracle;
+  beforeEach(async () => (
+      { contract } = await Oracle.deployed(),
+      { methods, events } = new web3.eth.Contract(
+        contract._jsonInterface,
+        contract._address
+      )
+    ))
 
-    before('Initialize and Deploy SmartContracts', async () => {
-      oracle = await Oracle.new();
-    });
 
-    it('should send a query and return transaction reciept', async() => {
-      var receipt = await oracle.update( "0x0d8775f648430679a709e98d2b0cb6250d2887ef", {
-        from: someone,
-        gas: 3000000
-      });
-
-      oracleContractAddress = receipt.logs[0].args[1];
-
-      assert.notEqual(oracleContractAddress, 0x0, "Oracle did not return anything");
-
-    });
+    it('Should log a new Provable Query', async () => {
+    const { events } = await methods
+      .update('0x0d8775f648430679a709e98d2b0cb6250d2887ef')
+      .send({
+        from: address,
+        gas: gasAmt
+      })
+    const description = events.LogNewProvableQuery.returnValues.description
+    assert.strictEqual(
+      description,
+      'Provable query was sent, standing by for the answer...',
+      'Provable query incorrectly logged!'
+    )
   })
+
+
+  it('Callback should log a new contract price', async () => {
+    const {
+      returnValues: {
+        price
+      }
+    } = await waitForEvent(events.LogNewPrice)
+    pricefrom = price
+    assert.isAbove(
+      parseFloat(price),
+      0,
+      'A price should have been retrieved from Provable call!'
+    )
+  })
+
 })
