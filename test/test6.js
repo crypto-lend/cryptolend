@@ -23,7 +23,7 @@
 */
 Oracle = artifacts.require("./PriceFeeder.sol");
 contract("Provable API query", function(accounts){
-  var borrower = accounts[0];
+  var someone = accounts[0];
 
   describe("Get Price From API", ()=> {
     var oracle;
@@ -34,13 +34,13 @@ contract("Provable API query", function(accounts){
 
     it('should send a query and return transaction reciept', async() => {
       var receipt = await oracle.update( "0x0d8775f648430679a709e98d2b0cb6250d2887ef", {
-        from: borrower,
+        from: someone,
         gas: 3000000
       });
 
       oracleContractAddress = receipt.logs[0].args[1];
 
-      assert.notEqual(oracleContractAddress, 0x0, "Oracle wasnt created correctly");
+      assert.notEqual(oracleContractAddress, 0x0, "Oracle did not return anything");
 
     });
   })

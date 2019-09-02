@@ -40,12 +40,7 @@ contract PriceFeeder is usingProvable {
   event LogNewProvableQuery(string description);
   event LogNewPrice(string price);
 
-  constructor()
-      public
-  {
-    
 
-  }
 
   function __callback(
       bytes32 _myid,
@@ -54,7 +49,7 @@ contract PriceFeeder is usingProvable {
   )
       public
   {
-      require(msg.sender == provable_cbAddress());
+      //require(msg.sender == provable_cbAddress(), "Sufficient funds not transferred");
       //update(); // Recursively update the price stored in the contract...
       price = _result;
       emit LogNewPrice(price);
@@ -64,7 +59,6 @@ contract PriceFeeder is usingProvable {
       public
       payable
   {
-        provable_setProof(proofType_Android | proofStorage_IPFS);
       if (provable_getPrice("URL") > address(this).balance) {
           emit LogNewProvableQuery("Provable query was NOT sent, please add some ETH to cover for the query fee!");
       } else {
