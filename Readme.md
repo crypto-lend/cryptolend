@@ -4,6 +4,14 @@ Finocial Protocol has been created to provide a secure, flexible, open source fo
 
 Join our telegram community to interact with members of our dev staff and other contributors.
 
+## Future
+
+We aim to build
+
+`decentralized credit rating`
+`collecting mechanism - external - internal`
+`payment channels`
+
 ## Dependencies
 
 This project uses Node.js version 8.10.0 - 8.11.3.
