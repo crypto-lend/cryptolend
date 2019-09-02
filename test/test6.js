@@ -21,9 +21,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-Oracle = artifacts.require("./External/PriceFeeder.sol");
+Oracle = artifacts.require("./PriceFeeder.sol");
 contract("Provable API query", function(accounts){
-  var admin = accounts[0];
+  var borrower = accounts[0];
 
   describe("Get Price From API", ()=> {
     var oracle;
@@ -32,9 +32,9 @@ contract("Provable API query", function(accounts){
       oracle = await Oracle.new();
     });
 
-    it('should create new loan offer and return loan contract address', async() => {
-      var receipt = await oracle.updatePrice( "0x0d8775f648430679a709e98d2b0cb6250d2887ef", {
-        from: admin,
+    it('should send a query and return transaction reciept', async() => {
+      var receipt = await oracle.update( "0x0d8775f648430679a709e98d2b0cb6250d2887ef", {
+        from: borrower,
         gas: 3000000
       });
 

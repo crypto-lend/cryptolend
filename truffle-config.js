@@ -66,9 +66,17 @@ module.exports = {
     // options below to some value.
 
     development: {
-     host: "127.0.0.1",     // Localhost (default: none)
-     port: 8545,            // Standard Ethereum port (default: none)
-     network_id: "*",       // Any network (default: none)
+      host: process.env.TRUFFLE_DEVELOP_HOST || 'localhost',
+      port: process.env.TRUFFLE_DEVELOP_PORT || 9545,
+      network_id: '*' // Match any network id
+    },
+
+    coverage: {
+      host: 'truffle-coverage',
+      network_id: '*', // eslint-disable-line camelcase
+      port: 8555,
+      gas: 0xfffffffffff,
+      gasPrice: 0x01
     },
 
     // Another network with more advanced options...
@@ -112,7 +120,7 @@ module.exports = {
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       settings: {          // See the solidity docs for advice about optimization and evmVersion
        optimizer: {
-         enabled: false,
+         enabled: true,
          runs: 200
        },
        evmVersion: "byzantium"
