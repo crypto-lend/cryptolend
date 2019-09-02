@@ -23,9 +23,9 @@
 */
 pragma solidity ^0.5.0;
 
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./libs/LoanMath.sol";
+import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./LoanMath.sol";
 
 contract LoanContract {
 
@@ -65,7 +65,7 @@ contract LoanContract {
         uint256 loanAmount;
         uint256 loanCurrency;
         uint256 interestRate; // will be updated on acceptance in case of loan offer
-        string acceptedCollateralsMetadata; //json string
+        bytes32 acceptedCollateralsMetadata; //json string
         uint128 duration;
         uint256 createdOn;
         uint256 startedOn;
@@ -123,7 +123,7 @@ contract LoanContract {
         _;
     }
 
-    constructor(uint256 _loanAmount, uint128 _duration, string memory _acceptedCollateralsMetadata,
+    constructor(uint256 _loanAmount, uint128 _duration, bytes32 _acceptedCollateralsMetadata,
         uint256 _interestRate, address _collateralAddress,
         uint256 _collateralAmount, uint256 _collateralPriceInETH, uint256 _ltv, address _borrower, address _lender, LoanStatus _loanstatus) public {
         loan.loanAmount = _loanAmount;
@@ -182,7 +182,7 @@ contract LoanContract {
         loan.borrower = msg.sender;
         /* This will call setters and enrich loan data */
         enrichLoan(_interestRate,_collateralAddress,_collateralAmount, _collateralPriceInETH,_ltv);
-        // We need emit Some event stating borrower has accepted the loanOffer
+
         // borrower should transfer collateral after this. use same above method? YES (validation done)
         // to be done in UI
     }
@@ -206,15 +206,12 @@ contract LoanContract {
 
 
     function getLoanData() view public returns (
-        uint256 _loanAmount, uint128 _duration, uint256 _interest, string memory _acceptedCollateralsMetadata, uint256 startedOn, LoanStatus _loanStatus,
+        uint256 _loanAmount, uint128 _duration, uint256 _interest, bytes32 _acceptedCollateralsMetadata, uint256 startedOn, LoanStatus _loanStatus,
         address _collateralAddress, uint256 _collateralAmount, uint256 _collateralPrice, uint256 _ltv, CollateralStatus _collateralStatus,
         uint256 _remainingCollateralAmount,
         address _borrower, address _lender) {
 
-        return (loan.loanAmount, loan.duration, loan.interestRate, loan.acceptedCollateralsMetadata, loan.startedOn, loan.loanStatus,
-            loan.collateral.collateralAddress, loan.collateral.collateralAmount,
-            loan.collateral.collateralPrice, loan.collateral.ltv, loan.collateral.collateralStatus, remainingCollateralAmount,
-            loan.borrower, loan.lender);
+        return (loan.loanAmount, loan.duration, loan.interestRate, loan.acceptedCollateralsMetadata, loan.startedOn, loan.loanStatus, loan.collateral.collateralAddress, loan.collateral.collateralAmount, loan.collateral.collateralPrice, loan.collateral.ltv, loan.collateral.collateralStatus, remainingCollateralAmount, loan.borrower, loan.lender);
     }
 
     /* function getPaidRepaymentsCount() view public returns (uint256) {
