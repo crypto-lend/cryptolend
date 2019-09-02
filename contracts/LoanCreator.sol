@@ -23,8 +23,8 @@
 */
 pragma solidity ^0.5.0;
 
-import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "./LoanContract.sol";
 
 contract LoanCreator is Ownable, Pausable {
