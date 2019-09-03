@@ -24,7 +24,7 @@
 var Finocial = artifacts.require('./contracts/Finocial.sol');
 var LoanCreator = artifacts.require('./contracts/LoanCreator.sol');
 var StandardToken = artifacts.require('./contracts/StandardToken.sol');
-var PriceFeeder = artifacts.require('./contracts/PriceFeeder.sol');
+var PriceFeeder = artifacts.require('./contracts/External/PriceFeeder.sol');
 module.exports = async function(deployer, network, accounts) {
 
   deployer.deploy(Finocial);
