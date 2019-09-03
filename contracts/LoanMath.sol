@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 library LoanMath {
 
