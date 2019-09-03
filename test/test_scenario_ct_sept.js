@@ -26,7 +26,7 @@ contract("Test Sept", function(accounts) {
     repayments: ["0.003105", "0.003045"]
   };
   
-  var metadata = {json};
+  var metadata = {somedata};
   metadata = web3.utils.asciiToHex(metdata.toString());
   
   
