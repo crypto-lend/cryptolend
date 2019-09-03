@@ -34,10 +34,11 @@ contract("Test Sept", function(accounts) {
     loanAmount: web3.utils.toWei('0.006', 'ether'),
     duration: 60,
 	acceptedCollateralMetadata : metadata;
-    //interest: 100,
-    //collateralAddress: "0",
-    //collateralAmount: 5000,
-    //collateralPrice: web3.utils.toWei('0.00001', 'ether'),
+    interest: 100,
+	ltv : 40,
+    collateralAddress: "0",
+    collateralAmount: 5000,
+    collateralPrice: web3.utils.toWei('0.00001', 'ether'),
     borrower: loanofferAcceptor,
     lender: loanofferer,
     loanContractAddress: "0",
@@ -149,6 +150,14 @@ contract("Test Sept", function(accounts) {
 
 });
 
+
+  describe("Scenario Provable - Try to update price. Test PriceFeeder", () => {
+	  
+	  
+	  
+});
+
+
   describe("Scenario 2: Loan Offer Cycle - Without getting to repayments", () => {
      
     var loanCreator, standardToken, loanContractAddress;
@@ -158,7 +167,7 @@ contract("Test Sept", function(accounts) {
       loanCretor = await LoanCreator.new();
       standardToken = await StandardToken.new("Test Tokens", "TTT", 18, 10000000);
 
-      await standardToken.transfer(loanofferAcceptor, 1000000, {
+      await standardToken.transfer(loanOffer.borrower, 1000000, {
         from: admin,
         gas: 300000
       });
@@ -171,7 +180,7 @@ contract("Test Sept", function(accounts) {
 
       var receipt = await loanCretor.createNewLoanOffer(loanOffer.loanAmount, loanOffer.duration,
         loanOffer.acceptedCollateralMetadata, {
-        from: loanOffer.loanofferer,
+        from: loanOffer.lender,
         gas: 3000000
       });
 
@@ -181,7 +190,17 @@ contract("Test Sept", function(accounts) {
       assert.notEqual(loanOffer.loanContractAddress, 0x0, "Loan Contract wasnt created correctly");
     }); 
 	
-	if('should initiate and fund loan from lender', async() => {});
+	if('should initiate and fund loan from lender', async() => {
+		
+		var loanContract = await LoanContract.at(loanOffer.loanContractAddress);
+		var receipt = await loanContract.transferFundsToLoan({
+        from: loanOffer.lender,
+        value: loanOffer.loanAmount,
+        gas: 300000});
+		
+		var loan = await loanContract.getLoanData.call();
+        assert.equal(loan[5], 3, "Loan Contract status is not FUNDED");					
+	});
 	
     it('should return all loans', async() => {
 
@@ -205,20 +224,26 @@ contract("Test Sept", function(accounts) {
 	// borrower selects take this loan ^ choices are presented 
 	
 	// clicks submit on particular choice of collateral
-	it('should enrich the loan', async() => {
+	it('should accept+ enrich the loan', async() => {
 		
 		var loanContract = await LoanContract.at(loanOffer.loanContractAddress);
-		//  var receipt = await loanContract.enrichLoan()
-        //or should it call acceptLoanOffer?
-		//reads from the event and asserts
-       		
+		var receipt = await loanContract.acceptNenrichLoan(loanOffer.interest, loanOffer.collateralAddress, loanOffer.collateralAmount, loanOffer.collateralPrice, loanOffer.ltv, {
+        from: loanOffer.borrower,
+        gas: 3000000
+      })
+       
+	    //check for event
+		console.log(receipt.logs);
+       	var loan = await loanContract.getLoanData.call();
+        assert.equal(loan[12], loanOffer.borrower, "Correct borrower address not set");
+         		
 	});
 	
 	//next window prompt for collateral transfer
 	it('should initiate transfer of collateral', async() => {
 		
 		var receipt = await standardToken.approve(loanOffer.loanContractAddress, loanOffer.collateralAmount, {
-        from: loanOffer.loanofferAcceptor,
+        from: loanOffer.borrower,
         gas: 300000
       });
 	  
@@ -230,19 +255,30 @@ contract("Test Sept", function(accounts) {
     // hey let's check price here to meet LTV again and test price feeder?
 	
 	    var loanContract = await LoanContract.at(loanOffer.loanContractAddress);
+		var borrower_previous_balance = await await web3.eth.getBalance(loanOffer.borrower);
 
-        await loanContract.transferCollateralToLoan({
-        from: loanOffer.loanofferAcceptor,
+        var receipt = await loanContract.transferCollateralToLoan({
+        from: loanOffer.borrower,
         gas: 300000
       });
 		
-		 var loan = await loanContract.getLoanData.call();
+		var testAddress = receipt.logs[1].args[0];
+		// should have went in the if scenario
+		// also check for loanstartedOn event!
+		
+		// should trasnfer funds to borrower
+		assert.equal(await web3.eth.getBalance(loanOffer.borrower),
+        parseInt(borrower_previous_balance) + parseInt(loanOffer.loanAmount),
+        "Correct amount not transferred to BORROWER");
+		
+		var loan = await loanContract.getLoanData.call();
 
          assert.equal(loan[5], 2, "Loan Contract status in not ACTIVE");
          assert.equal(loan[10], 1, "Loan Collateral status is not ARRIVED");	
-        // what does asserting to 1 mean?		 
+        		 
 	});
-
-     
-	
+     	
 });
+
+
+    
