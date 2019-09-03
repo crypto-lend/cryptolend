@@ -21,13 +21,15 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-var Finocial = artifacts.require('./Finocial.sol');
-var StandardToken = artifacts.require('./StandardToken.sol');
-var PriceFeeder = artifacts.require('./PriceFeeder.sol');
+var Finocial = artifacts.require('./contracts/Finocial.sol');
+var LoanCreator = artifacts.require('./contracts/LoanCreator.sol');
+var StandardToken = artifacts.require('./contracts/StandardToken.sol');
+var PriceFeeder = artifacts.require('./contracts/PriceFeeder.sol');
 module.exports = async function(deployer, network, accounts) {
 
   deployer.deploy(Finocial);
   deployer.deploy(PriceFeeder);
+  deployer.deploy(LoanCreator);
 
   /**
   * below deployment should be only for Development
