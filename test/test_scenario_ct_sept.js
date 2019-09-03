@@ -26,16 +26,16 @@ contract("Test Sept", function(accounts) {
     repayments: ["0.003105", "0.003045"]
   };
   
-  var metadata = "{json}";
+  var metadata = {json};
   metadata = web3.utils.asciiToHex(metdata.toString());
   
   
   var loanOffer = {
     loanAmount: web3.utils.toWei('0.006', 'ether'),
     duration: 60,
-	acceptedCollateralMetadata : metadata;
+    acceptedCollateralMetadata : metadata,
     interest: 100,
-	ltv : 40,
+    ltv: 40,
     collateralAddress: "0",
     collateralAmount: 5000,
     collateralPrice: web3.utils.toWei('0.00001', 'ether'),
