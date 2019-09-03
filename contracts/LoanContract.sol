@@ -66,7 +66,7 @@ contract LoanContract {
         uint256 loanAmount;
         uint256 loanCurrency;
         uint256 interestRate; // will be updated on acceptance in case of loan offer
-        bytes32 acceptedCollateralsMetadata; //json string
+        string acceptedCollateralsMetadata; //json string
         uint128 duration;
         uint256 createdOn;
         uint256 startedOn;
@@ -85,6 +85,7 @@ contract LoanContract {
         loan.collateral.collateralAmount = _collateralAmount;
         loan.collateral.collateralStatus = CollateralStatus.WAITING;
         loan.collateral.ltv = _ltv;
+        emit LoanContractUpdated(_interestRate, _collateralAddress, _collateralPriceInETH, _collateralAmount, _ltv);
     }
 
     LoanData loan;
@@ -113,6 +114,7 @@ contract LoanContract {
     event CollateralTransferReturnedToBorrower(address, uint256);
     event CollateralClaimedByLender(address, uint256);
     event CollateralSentToLenderForDefaultedRepayment(uint256,address,uint256);
+    event LoanContractUpdated(uint256, address, uint256, uint256, uint256);
 
     modifier OnlyBorrower {
         require(msg.sender == loan.borrower, "Not Authorised");
@@ -124,7 +126,7 @@ contract LoanContract {
         _;
     }
 
-    constructor(uint256 _loanAmount, uint128 _duration, bytes32 _acceptedCollateralsMetadata,
+    constructor(uint256 _loanAmount, uint128 _duration, string memory _acceptedCollateralsMetadata,
         uint256 _interestRate, address _collateralAddress,
         uint256 _collateralAmount, uint256 _collateralPriceInETH, uint256 _ltv, address _borrower, address _lender, LoanStatus _loanstatus) public {
         loan.loanAmount = _loanAmount;
@@ -207,7 +209,7 @@ contract LoanContract {
 
 
     function getLoanData() view public returns (
-        uint256 _loanAmount, uint128 _duration, uint256 _interest, bytes32 _acceptedCollateralsMetadata, uint256 startedOn, LoanStatus _loanStatus,
+        uint256 _loanAmount, uint128 _duration, uint256 _interest, string memory _acceptedCollateralsMetadata, uint256 startedOn, LoanStatus _loanStatus,
         address _collateralAddress, uint256 _collateralAmount, uint256 _collateralPrice, uint256 _ltv, CollateralStatus _collateralStatus,
         uint256 _remainingCollateralAmount,
         address _borrower, address _lender) {
