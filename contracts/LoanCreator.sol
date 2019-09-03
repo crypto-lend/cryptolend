@@ -40,7 +40,7 @@ contract LoanCreator is Ownable, Pausable {
  event LoanRequestCreated(address, address);
 
  // parameters and attributes will change depending on changes in loancontract
- function createNewLoanOffer(uint256 _loanAmount, uint128 _duration, bytes32 _acceptedCollateralsMetadata) public returns(address _loanContractAddress) {
+ function createNewLoanOffer(uint256 _loanAmount, uint128 _duration, string memory _acceptedCollateralsMetadata) public returns(address _loanContractAddress) {
 
          _loanContractAddress = address (new LoanContract(_loanAmount, _duration, _acceptedCollateralsMetadata, 0, address(0), 0, 0, 0, address(0), msg.sender, LoanContract.LoanStatus.OFFER));
 
