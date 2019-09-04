@@ -25,7 +25,8 @@ const Web3 = require('web3');
 
 
 provider = () => {
-  return new Web3(web3.currentProvider);
+  const _web3 = new Web3(web3.currentProvider);
+  return _web3;
 }
 
 
@@ -53,7 +54,7 @@ advanceTime = (time, web3) => {
 
 advanceBlock = () => {
     return new Promise((resolve, reject) => {
-        web3.currentProvider.send({
+        _web3.currentProvider.send({
             jsonrpc: "2.0",
             method: "evm_mine",
             id: new Date().getTime()

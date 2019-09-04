@@ -24,9 +24,8 @@
 var FinocialLoan = artifacts.require("./LoanContract.sol");
 var Finocial = artifacts.require("./LoanCreator.sol");
 const helper = require("./truffleTestHelpers");
-const web3 = require('web3');
+const web3 = provider()
 
-const eth3 = new web3(helper.provider());
 
 contract("Should Create Loan Offer", function(accounts) {
 

@@ -2,17 +2,17 @@
 * MIT License
 *
 * Copyright (c) 2019 Finocial
-* 
+*
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
 * in the Software without restriction, including without limitation the rights
 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 * copies of the Software, and to permit persons to whom the Software is
 * furnished to do so, subject to the following conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be included in all
 * copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -24,7 +24,8 @@
 var Finocial = artifacts.require("./Finocial.sol");
 var FinocialLoan = artifacts.require("./FinocialLoan.sol");
 var StandardToken = artifacts.require("./StandardToken.sol");
-const helper = require("./truffleTestHelpers");
+const {helper, provider} = require("./truffleTestHelpers");
+const web3 = provider();
 
 contract("Test 2", function(accounts) {
 
@@ -181,7 +182,7 @@ contract("Test 2", function(accounts) {
 
       for(let i=1; i< loanRequest.repayments.length; i++){
 
-          await helper.advanceTime(1980);
+          await advanceTime(1980);
 
           var r = await finocialLoan.getRepaymentAmount.call(i+1);
 
@@ -218,7 +219,7 @@ contract("Test 2", function(accounts) {
 
     it('should return collateral to borrower after loan expiration', async() => {
 
-      await helper.advanceTime(1980);
+      await advanceTime(1980);
 
       var finocialLoan = await FinocialLoan.at(loanRequest.loanContractAddress);
 
@@ -286,7 +287,7 @@ contract("Test 2", function(accounts) {
         gas: 300000
       });
 
-      await helper.advanceTime(3960);
+      await advanceTime(3960);
 
       var r3 = await finocialLoan.getRepaymentAmount.call(3);
       await finocialLoan.repayLoan({
@@ -295,7 +296,7 @@ contract("Test 2", function(accounts) {
         gas: 300000
       });
 
-      await helper.advanceTime(4000);
+      await advanceTime(4000);
 
     });
 

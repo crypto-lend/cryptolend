@@ -1,8 +1,8 @@
 var LoanCreator = artifacts.require("./LoanContract.sol");
 var LoanContract = artifacts.require("./LoanContract.sol");
 var StandardToken = artifacts.require("./StandardToken.sol");
-const helper = require("./truffleTestHelpers");
-
+const {helper, provider} = require("./truffleTestHelpers");
+const web3 = provider();
 contract("Test Sept", function(accounts) {
 
   var admin = accounts[0];
