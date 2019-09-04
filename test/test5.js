@@ -133,13 +133,16 @@ var loanOffer = {
 
   it('borrower should accept the loan createad by lender', async() => {
     var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
-    await finocialLoan.acceptLoanOffer(loanOffer.interest, loanOffer.collateralAddress, loanOffer.collateralAmount, loanOffer.collateralPrice, loanOffer.ltv,{
+    var receipt = await finocialLoan.acceptLoanOffer(loanOffer.interest, loanOffer.collateralAddress, loanOffer.collateralAmount, loanOffer.collateralPrice, loanOffer.ltv,{
       from: borrower,
       gas: 300000
     })
+    
+    var checkInterestUpdate = receipt.logs[0].args[0];
 
     var loan = await finocialLoan.getLoanData.call();
     assert.equal(loan[12], loanOffer.borrower, "Correct borrower address not set");
+    assert.equal(loan[2], checkInterestUpdate, "Interest rate enrichment failed");
   })
 
   it('borrower should transfer the collateral once accepted the loan', async() => {
