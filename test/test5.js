@@ -152,7 +152,10 @@ var loanOffer = {
       gas: 300000
     });
 
-    var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress)
+    var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+    var borrower_previous_balance = await await web3.eth.getBalance(loanOffer.borrower);
+    
+    
 
     await finocialLoan.transferCollateralToLoan({
       from: borrower,
@@ -163,16 +166,10 @@ var loanOffer = {
 
     assert.equal(loan[5], 2, "Loan Contract status in not ACTIVE");
     assert.equal(loan[10], 1, "Loan Collateral status is not ARRIVED");
+    assert.equal(await web3.eth.getBalance(loanOffer.borrower),
+        parseInt(borrower_previous_balance) + parseInt(loanOffer.loanAmount),
+        "Correct amount not transferred to BORROWER");
   })
-
-
-  it('borrower makes  first repayment on time', async() => {
-
-    var finocialLoan = await LoanContract.repayLoan({
-
-    })
-  })
-
 
   });
 
