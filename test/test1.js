@@ -82,6 +82,7 @@ contract("Test 1", function(accounts) {
 
       var loans = await finocial.getAllLoans.call();
 
+
       assert.notEqual(loans.length, 0, "Loans not returned correctly");
 
     });

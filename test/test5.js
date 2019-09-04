@@ -21,8 +21,9 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-var FinocialLoan = artifacts.require("./LoanContract.sol");
-var Finocial = artifacts.require("./LoanCreator.sol");
+var LoanContract = artifacts.require("./LoanContract.sol");
+var LoanCreator = artifacts.require("./LoanCreator.sol");
+var StandardToken = artifacts.require("./StandardToken.sol")
 const helper = require("./truffleTestHelpers");
 const web3 = provider()
 
@@ -53,24 +54,41 @@ contract("Should Create Loan Offer", function(accounts) {
 // converting the above
 metadata = web3.utils.asciiToHex(metdata.toString())
 var loanOffer = {
-    loanAmount: web3.utils.toWei('0.006', 'ether'),
-    duration: 60,
-    acceptedCollateralsMetadata: metadata
-  };
-
+  loanAmount: web3.utils.toWei('0.006', 'ether'),
+  duration: 60,
+  acceptedCollateralMetadata : metadata,
+  interest: 100,
+  ltv: 40,
+  collateralAddress: "0x",
+  collateralAmount: 5000,
+  collateralPrice: web3.utils.toWei('0.00001', 'ether'),
+  borrower: borrower,
+  lender: lender,
+  loanContractAddress: "0",
+  //outstandingAmount: "0.00615",
+  //repayments: ["0.003105", "0.003045"]
+};
   describe("Scenario 1: Create Loan Offer", () => {
 
     var finocial, loanContractAddress;
 
     before('Initialize and Deploy SmartContracts', async () => {
-      finocial = await Finocial.new();
+      finocial = await LoanCreator.new();
+      standardToken = await StandardToken.new("Test Tokens", "TTT", 18, 10000000);
+
+      await standardToken.transfer(borrower, 1000000, {
+        from: admin,
+        gas: 300000
+      });
+
+      loanOffer.collateralAddress = standardToken.address;
     });
 
 
     it('should create new loan offer and return loan contract address', async() => {
 
       var receipt = await finocial.createNewLoanOffer(loanOffer.loanAmount, loanOffer.duration,
-        loanOffer.acceptedCollateralsMetadata, {
+        loanOffer.acceptedCollateralMetadata, {
         from: lender,
         gas: 3000000
       });
@@ -91,7 +109,7 @@ var loanOffer = {
 
     it('should get loan data from loan contract', async() => {
 
-      var finocialLoan = await FinocialLoan.at(loanOffer.loanContractAddress);
+      var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
       var loan = await finocialLoan.getLoanData.call();
 
       assert.notEqual(loan, undefined, "Loan Data not correct");
@@ -99,10 +117,8 @@ var loanOffer = {
     });
 
     it('should fund loan from the lender side', async() => {
-
-      var lender_previous_balance =  await web3.eth.getBalance(lender);
-
-      var finocialLoan = await FinocialLoan.transferFundsToLoan({
+      var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+      await finocialLoan.transferFundsToLoan({
         from: lender,
         value: loanOffer.loanAmount,
         gas: 30000
@@ -110,32 +126,46 @@ var loanOffer = {
 
     var loan = await finocialLoan.getLoanData.call();
 
-    assert.equal(loan[4], 2, "Loan Contract status is not FUNDED");
-    assert.equal(await web3.eth.getBalance(lender),
-      parseInt(lender_previous_balance) + parseInt(loanOffer.loanAmount),
-      "Correct amount not transferred to loan Contract");
-    assert.equal(loan[12], lender, "Correct lender address not set");
+    assert.equal(loan[5], 3, "Loan Contract status is not FUNDED");
   });
 
 
+
   it('borrower should accept the loan createad by lender', async() => {
-
-    var finocialLoan = await FinocialLoan.acceptLoanOffer({
-
+    var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+    await finocialLoan.acceptLoanOffer(loanOffer.interest, loanOffer.collateralAddress, loanOffer.collateralAmount, loanOffer.collateralPrice, loanOffer.ltv,{
+      from: borrower,
+      gas: 300000
     })
+
+    var loan = await finocialLoan.getLoanData.call();
+    assert.equal(loan[12], loanOffer.borrower, "Correct borrower address not set");
   })
 
   it('borrower should transfer the collateral once accepted the loan', async() => {
 
-    var finocialLoan = await FinocialLoan.transferCollateralToLoan({
+    await standardToken.approve(loanOffer.loanContractAddress, loanOffer.collateralAmount, {
+      from: borrower,
+      gas: 300000
+    });
 
+    var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress)
+
+    await finocialLoan.transferCollateralToLoan({
+      from: borrower,
+      gas: 300000
     })
+
+    var loan = await finocialLoan.getLoanData.call();
+
+    assert.equal(loan[5], 2, "Loan Contract status in not ACTIVE");
+    assert.equal(loan[10], 1, "Loan Collateral status is not ARRIVED");
   })
 
 
   it('borrower makes  first repayment on time', async() => {
 
-    var finocialLoan = await FinocialLoan.repayLoan({
+    var finocialLoan = await LoanContract.repayLoan({
 
     })
   })
