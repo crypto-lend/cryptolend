@@ -21,11 +21,11 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-const web3 = require('web3');
+const Web3 = require('web3');
 
 
-provider = async() => {
-  return web3.givenProvider;
+provider = () => {
+  return new Web3(web3.currentProvider);
 }
 
 
@@ -37,7 +37,7 @@ advanceTimeAndBlock = async (time) => {
     return Promise.resolve(web3.eth.getBlock('latest'));
 }
 
-advanceTime = (time) => {
+advanceTime = (time, web3) => {
     return new Promise((resolve, reject) => {
         web3.currentProvider.send({
             jsonrpc: "2.0",

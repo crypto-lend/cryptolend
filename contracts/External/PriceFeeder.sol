@@ -40,10 +40,11 @@ contract PriceFeeder is usingProvable {
   event LogNewProvableQuery(string description);
   event LogNewPrice(string price);
 
+
   constructor()
       public
   {
-      
+
 
   }
 
@@ -57,6 +58,7 @@ contract PriceFeeder is usingProvable {
       require(msg.sender == provable_cbAddress());
       //update(); // Recursively update the price stored in the contract...
       price = _result;
+      
       emit LogNewPrice(price);
   }
 
