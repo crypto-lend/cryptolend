@@ -182,7 +182,7 @@ contract("Test 1", function(accounts) {
 
       for(let i=1; i< loanRequest.repayments.length; i++){
 
-          await advanceTime(1980, web3);
+          await advanceTime(1980);
 
           var r = await finocialLoan.getRepaymentAmount.call(i+1);
 
@@ -219,7 +219,7 @@ contract("Test 1", function(accounts) {
 
     it('should return collateral to borrower after loan expiration', async() => {
 
-      await advanceTime(1980, web3);
+      await advanceTime(1980);
 
       var finocialLoan = await FinocialLoan.at(loanRequest.loanContractAddress);
 
@@ -287,7 +287,7 @@ contract("Test 1", function(accounts) {
         gas: 300000
       });
 
-      await advanceTime(4000, web3);
+      await advanceTime(4000);
 
     });
 
