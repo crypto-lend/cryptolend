@@ -66,7 +66,7 @@ var loanOffer = {
   lender: lender,
   loanContractAddress: "0",
   //outstandingAmount: "0.00615",
-  //repayments: ["0.003105", "0.003045"]
+  repayments: ["0.003105", "0.003045"]
 };
   describe("Scenario 1: Create Loan Offer", () => {
 
@@ -170,6 +170,26 @@ var loanOffer = {
         parseInt(borrower_previous_balance) + parseInt(loanOffer.loanAmount),
         "Correct amount not transferred to BORROWER");
   })
+    
+    
+   it("should get correct repayment amounts", async() => {
+
+      var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+
+      let count = 0;
+      loanOffer.repayments.forEach(async function(repayment){
+          ++count;
+          var r = await finocialLoan.getRepaymentAmount.call(count);
+
+          assert.equal(parseInt(r.amount), web3.utils.toWei(repayment, 'ether'), "Repayment " + count + " is not correct");
+      });
+
+    });
+    
+    // it("should be able to call make failed repayments", async() => {
+         
+       });
+
 
   });
 
