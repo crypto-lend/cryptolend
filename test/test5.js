@@ -186,9 +186,22 @@ var loanOffer = {
 
     });
     
-    // it("should be able to call make failed repayments", async() => {
+    /* it("should be able to call make failed repayments", async() => {
+         //admin will call this function to release collateral for missed repayment
+          var lender_previous_balance = await web3.eth.getBalance(loanOffer.lender);
+          var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+          var r1 = await finocialLoan.getRepaymentAmount.call(1);
+          
+        await finocialLoan.makeFailedRepayments({
+        from: admin,
+        gas: 300000  
+      });
+      
+        var loan = await finocialLoan.getLoanData.call();
          
-       });
+        //check if collateral transferred to lender
+        
+       });*/
 
 
   });
