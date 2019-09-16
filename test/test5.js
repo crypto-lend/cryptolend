@@ -66,7 +66,7 @@ var loanOffer = {
   lender: lender,
   loanContractAddress: "0",
   //outstandingAmount: "0.00615",
-  //repayments: ["0.003105", "0.003045"]
+  repayments: ["0.003105", "0.003045"]
 };
   describe("Scenario 1: Create Loan Offer", () => {
 
@@ -133,13 +133,16 @@ var loanOffer = {
 
   it('borrower should accept the loan createad by lender', async() => {
     var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
-    await finocialLoan.acceptLoanOffer(loanOffer.interest, loanOffer.collateralAddress, loanOffer.collateralAmount, loanOffer.collateralPrice, loanOffer.ltv,{
+    var receipt = await finocialLoan.acceptLoanOffer(loanOffer.interest, loanOffer.collateralAddress, loanOffer.collateralAmount, loanOffer.collateralPrice, loanOffer.ltv,{
       from: borrower,
       gas: 300000
     })
+    
+    //var checkInterestUpdate = receipt.logs[0].args[0];
 
     var loan = await finocialLoan.getLoanData.call();
     assert.equal(loan[12], loanOffer.borrower, "Correct borrower address not set");
+    assert.equal(loan[2], loanOffer.interest, "Interest rate enrichment failed");
   })
 
   it('borrower should transfer the collateral once accepted the loan', async() => {
@@ -149,7 +152,10 @@ var loanOffer = {
       gas: 300000
     });
 
-    var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress)
+    var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+    var borrower_previous_balance = await await web3.eth.getBalance(loanOffer.borrower);
+    
+    
 
     await finocialLoan.transferCollateralToLoan({
       from: borrower,
@@ -160,15 +166,42 @@ var loanOffer = {
 
     assert.equal(loan[5], 2, "Loan Contract status in not ACTIVE");
     assert.equal(loan[10], 1, "Loan Collateral status is not ARRIVED");
+    assert.equal(await web3.eth.getBalance(loanOffer.borrower),
+        parseInt(borrower_previous_balance) + parseInt(loanOffer.loanAmount),
+        "Correct amount not transferred to BORROWER");
   })
+    
+    
+   it("should get correct repayment amounts", async() => {
 
+      var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
 
-  // it('borrower makes  first repayment on time', async() => {
-  //
-  //   var finocialLoan = await LoanContract.repayLoan({
-  //
-  //   })
-  // })
+      let count = 0;
+      loanOffer.repayments.forEach(async function(repayment){
+          ++count;
+          var r = await finocialLoan.getRepaymentAmount.call(count);
+
+          assert.equal(parseInt(r.amount), web3.utils.toWei(repayment, 'ether'), "Repayment " + count + " is not correct");
+      });
+
+    });
+    
+    /* it("should be able to call make failed repayments", async() => {
+         //admin will call this function to release collateral for missed repayment
+          var lender_previous_balance = await web3.eth.getBalance(loanOffer.lender);
+          var finocialLoan = await LoanContract.at(loanOffer.loanContractAddress);
+          var r1 = await finocialLoan.getRepaymentAmount.call(1);
+          
+        await finocialLoan.makeFailedRepayments({
+        from: admin,
+        gas: 300000  
+      });
+      
+        var loan = await finocialLoan.getLoanData.call();
+         
+        //check if collateral transferred to lender
+        
+       });*/
 
 
   });

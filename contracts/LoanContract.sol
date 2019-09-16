@@ -30,6 +30,10 @@ import "./libs/LoanMath.sol";
 import "./External/PriceFeeder.sol";
 import "./libs/String.sol";
 
+/*import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
+import "./LoanMath.sol";*/
+
 contract LoanContract {
 
     using SafeMath for uint256;
@@ -37,6 +41,7 @@ contract LoanContract {
     uint256 constant PLATFORM_FEE_RATE = 100;
     address constant WALLET_1 = 0x88347aeeF7b66b743C46Cb9d08459784FA1f6908;
     uint256 constant SOME_THINGS = 105;
+    address admin = 0x95FfeBC06Bb4b7DeDfF961769055C335542E1dBF;
 
     enum LoanStatus {
         OFFER,
@@ -73,7 +78,7 @@ contract LoanContract {
         uint256 createdOn;
         uint256 startedOn;
        // uint256 outstandingAmount;
-        //uint256[] repayments;
+        mapping (uint256 => bool) repayments;
         address borrower;
         address lender;
         LoanStatus loanStatus;
@@ -105,16 +110,14 @@ contract LoanContract {
         uint256 repaymentNumber;
     } */
 
-    mapping (uint256 => bool) internal repayments;
-
-
+    //mapping (uint256 => bool) internal repayments;
 
     event CollateralTransferToLoanFailed(address, uint256);
     event CollateralTransferToLoanSuccessful(address, uint256);
     event FundTransferToLoanSuccessful(address, uint256);
     event FundTransferToBorrowerSuccessful(address, uint256);
     event LoanRepaid(address, uint256);
-    event LoanStarted(uint256);
+    event LoanStarted(uint256 _value); // watch for this event 
     event CollateralTransferReturnedToBorrower(address, uint256);
     event CollateralClaimedByLender(address, uint256);
     event CollateralSentToLenderForDefaultedRepayment(uint256,address,uint256);
@@ -124,11 +127,20 @@ contract LoanContract {
         require(msg.sender == loan.borrower, "Not Authorised");
         _;
     }
-
+    
+     modifier OnlyAdmin {
+        require(msg.sender == admin, "Only Admin");
+        _;
+    }
+    
     modifier OnlyLender {
         require(msg.sender == loan.lender, "Not Authorised");
         _;
     }
+    
+    
+    
+    // watch for this event  LoanStartedOn during two transactions approveLoanRequest & transferCollateralToLoan
 
     constructor(uint256 _loanAmount, uint128 _duration, string memory _acceptedCollateralsMetadata,
         uint256 _interestRate, address _collateralAddress,
@@ -141,6 +153,7 @@ contract LoanContract {
         loan.borrower = _borrower;
         loan.lender = _lender;
         loan.loanStatus = _loanstatus;
+        // loan.repayments = ;
         //loan.outstandingAmount = LoanMath.calculateTotalLoanRepaymentAmount(_loanAmount, _interestRate, PLATFORM_FEE_RATE, _duration);
         remainingCollateralAmount = _collateralAmount;
         loan.collateral = CollateralData(_collateralAddress, _collateralAmount, _collateralPriceInETH, _ltv, CollateralStatus.WAITING);
@@ -261,30 +274,27 @@ contract LoanContract {
     }
 
     // this func to be called when any repayment due date is passed
-    function makeFailedRepayments() external payable {
+    
+    
+    // based on nth duration it is triggered we pass repayment number from UI
+    function makeFailedRepayments(uint256 _repaymentNumberMissed) public OnlyAdmin {
+    
     // UI checks if anytime now > due date of repayment n
-    uint256 totalLoanRepayments = LoanMath.getTotalNumberOfRepayments(loan.duration);
-
-    uint256 repaymentNumber;
-    if(LoanMath.getRepaymentNumber(loan.startedOn, loan.duration).sub(1) > 0) {
-        repaymentNumber = LoanMath.getRepaymentNumber(loan.startedOn, loan.duration).sub(1);
-    }
-    else {
-        repaymentNumber = totalLoanRepayments;
-
-    }
-
-     // cheks if repayment n was added in paid repayments array
-    bool wasPaid = repayments[repaymentNumber]; // update formulae
-    if(!wasPaid)
-    {
+    //uint256 totalLoanRepayments = LoanMath.getTotalNumberOfRepayments(loan.duration);
+    // can be done in UI
+    //this is not handled properly
+    
+    uint256 repaymentNumber = _repaymentNumberMissed;
+    
+   // cheks if repayment n was added in paid repayments array
+        require(loan.repayments[repaymentNumber] == false,"repayment was already paid");
+    
         // initates transfer according to repayment amount and current value of collateral1
-        (uint256 _repayAmount,,uint256 fees) = getRepaymentAmount(repaymentNumber);
+        (uint256 _repayAmount,uint256 interest,uint256 fees) = getRepaymentAmount(repaymentNumber);
          uint256 collateralAmountToTrasnfer = LoanMath.calculateCollateralAmountToDeduct((_repayAmount.sub(fees)).mul(SOME_THINGS.div(100)), loan.collateral.collateralPrice);
          ERC20 = IERC20(loan.collateral.collateralAddress);
          ERC20.transfer(loan.lender, collateralAmountToTrasnfer);
          emit CollateralSentToLenderForDefaultedRepayment(repaymentNumber,loan.lender,collateralAmountToTrasnfer);
-    }
   }
 
 
@@ -308,7 +318,7 @@ contract LoanContract {
       //  if(loan.outstandingAmount <= 0)
       //      loan.loanStatus = LoanStatus.REPAID;
 
-        repayments[repaymentNumber] = true;
+        loan.repayments[repaymentNumber] = true;
 
         address(uint160(loan.lender)).transfer(toTransfer);
 
