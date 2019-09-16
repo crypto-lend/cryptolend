@@ -153,7 +153,7 @@ var loanOffer = {
 
     await finocialLoan.transferCollateralToLoan({
       from: borrower,
-      gas: 300000
+      gas: 3e6
     })
 
     var loan = await finocialLoan.getLoanData.call();
@@ -163,12 +163,12 @@ var loanOffer = {
   })
 
 
-  it('borrower makes  first repayment on time', async() => {
-
-    var finocialLoan = await LoanContract.repayLoan({
-
-    })
-  })
+  // it('borrower makes  first repayment on time', async() => {
+  //
+  //   var finocialLoan = await LoanContract.repayLoan({
+  //
+  //   })
+  // })
 
 
   });

@@ -35,10 +35,10 @@ import "./provableAPI.sol";
 
 contract PriceFeeder is usingProvable {
 
-  string public price;
+  uint256 public price;
 
   event LogNewProvableQuery(string description);
-  event LogNewPrice(string price);
+  event LogNewPrice(uint256 price);
 
 
   constructor()
@@ -50,7 +50,7 @@ contract PriceFeeder is usingProvable {
 
   function __callback(
       bytes32 _myid,
-      string memory _result,
+      uint256 _result,
       bytes memory _proof
   )
       public
@@ -58,7 +58,7 @@ contract PriceFeeder is usingProvable {
       require(msg.sender == provable_cbAddress());
       //update(); // Recursively update the price stored in the contract...
       price = _result;
-      
+
       emit LogNewPrice(price);
   }
 

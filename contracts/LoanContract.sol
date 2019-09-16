@@ -27,6 +27,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "./libs/LoanMath.sol";
+import "./External/PriceFeeder.sol";
+import "./libs/String.sol";
 
 contract LoanContract {
 
@@ -90,6 +92,8 @@ contract LoanContract {
 
     LoanData loan;
 
+    PriceFeeder price;
+
     IERC20 public ERC20;
 
     uint256 public remainingCollateralAmount = 0;
@@ -152,7 +156,7 @@ contract LoanContract {
     }
 
     // after loan request created
-    function transferCollateralToLoan() public OnlyBorrower {
+    function transferCollateralToLoan() payable public OnlyBorrower  {
 
         ERC20 = IERC20(loan.collateral.collateralAddress);
         LoanStatus prevStatus = loan.loanStatus;
@@ -164,6 +168,17 @@ contract LoanContract {
 
         loan.collateral.collateralStatus = CollateralStatus.ARRIVED;
         loan.loanStatus = LoanStatus.ACTIVE;
+        // We check the latest price of the collateral using the oracle
+        // Here we need to change CollateralAddress to String
+        /**
+        *    We need to use the string
+        */
+        // Before we send address for price we need to convert it into the string
+
+        string memory contractAddress = StringLib.toString(loan.collateral.collateralAddress);
+        // We make the price call and then we check the price using .price () method
+        price.update.value(msg.value)(contractAddress);
+        loan.collateral.collateralPrice = price.price();
         ERC20.transferFrom(msg.sender, address(this), loan.collateral.collateralAmount);
 
         emit CollateralTransferToLoanSuccessful(msg.sender, loan.collateral.collateralAmount);

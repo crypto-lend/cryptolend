@@ -36,6 +36,10 @@ Assuming you have npm already, Install truffle
 
 `make install_deps`
 
+## Running ETH Bridge
+
+`npx ethereum-bridge -a 9 -H 127.0.0.1 -p 9545 --dev`
+
 ## Tests
 
 Start truffle and its development blockchain with
