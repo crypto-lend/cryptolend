@@ -32,7 +32,8 @@ import "./libs/String.sol";
 
 /*import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "github.com/OpenZeppelin/openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./LoanMath.sol";*/
+import "./LoanMath.sol";
+import "./PriceFeeder.sol";*/
 
 contract LoanContract {
 
@@ -113,7 +114,7 @@ contract LoanContract {
     //mapping (uint256 => bool) internal repayments;
 
     event CollateralTransferToLoanFailed(address, uint256);
-    event CollateralTransferToLoanSuccessful(address, uint256);
+    event CollateralTransferToLoanSuccessful(address, uint256, uint256);
     event FundTransferToLoanSuccessful(address, uint256);
     event FundTransferToBorrowerSuccessful(address, uint256);
     event LoanRepaid(address, uint256);
@@ -167,6 +168,13 @@ contract LoanContract {
           //status changed OFFER -> FUNDED
          emit FundTransferToLoanSuccessful(msg.sender, msg.value);
     }
+    
+    function toString(address x) public returns (string memory) {
+        bytes memory b = new bytes(20);
+        for (uint i = 0; i < 20; i++)
+            b[i] = byte(uint8(uint(x) / (2**(8*(19 - i)))));
+        return string(b);
+    }
 
     // after loan request created
     function transferCollateralToLoan() payable public OnlyBorrower  {
@@ -188,13 +196,17 @@ contract LoanContract {
         */
         // Before we send address for price we need to convert it into the string
 
-        string memory contractAddress = StringLib.toString(loan.collateral.collateralAddress);
+        string memory contractAddress = toString(loan.collateral.collateralAddress);
         // We make the price call and then we check the price using .price () method
         price.update.value(msg.value)(contractAddress);
+        // what is msg.value?
+        
+        // this would need to be called after price is fed!
         loan.collateral.collateralPrice = price.price();
+        
         ERC20.transferFrom(msg.sender, address(this), loan.collateral.collateralAmount);
 
-        emit CollateralTransferToLoanSuccessful(msg.sender, loan.collateral.collateralAmount);
+        emit CollateralTransferToLoanSuccessful(msg.sender, loan.collateral.collateralAmount, loan.collateral.collateralPrice);
 
         // contract will also be transferring funds to borrower (only in case of loan offer)
          if(prevStatus == LoanStatus.FUNDED)
