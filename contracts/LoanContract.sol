@@ -98,7 +98,7 @@ contract LoanContract {
 
     LoanData loan;
 
-    PriceFeeder price;
+    //PriceFeeder price;
 
     IERC20 public ERC20;
 
@@ -188,7 +188,7 @@ contract LoanContract {
         }
 
         loan.collateral.collateralStatus = CollateralStatus.ARRIVED;
-        loan.loanStatus = LoanStatus.ACTIVE;
+        
         // We check the latest price of the collateral using the oracle
         // Here we need to change CollateralAddress to String
         /**
@@ -196,13 +196,13 @@ contract LoanContract {
         */
         // Before we send address for price we need to convert it into the string
 
-        string memory contractAddress = toString(loan.collateral.collateralAddress);
+        //string memory contractAddress = toString(loan.collateral.collateralAddress);
         // We make the price call and then we check the price using .price () method
-        price.update.value(msg.value)(contractAddress);
+        //price.update.value(msg.value)(contractAddress);
         // what is msg.value?
         
         // this would need to be called after price is fed!
-        loan.collateral.collateralPrice = price.price();
+        //loan.collateral.collateralPrice = price.price();
         
         ERC20.transferFrom(msg.sender, address(this), loan.collateral.collateralAmount);
 
@@ -214,6 +214,7 @@ contract LoanContract {
         address(uint160(loan.borrower)).transfer(loan.loanAmount);
         emit FundTransferToBorrowerSuccessful(loan.borrower, loan.loanAmount);
         loan.startedOn = now;
+        loan.loanStatus = LoanStatus.ACTIVE;
         emit LoanStarted(loan.startedOn);
         // We monitor this event and block time it was fired. every duration interval apart, we call function to make a call for potentially failed repayments
         }
@@ -242,8 +243,9 @@ contract LoanContract {
 
         emit FundTransferToLoanSuccessful(msg.sender, msg.value);
         loan.startedOn = now;
-
+        
         address(uint160(loan.borrower)).transfer(loan.loanAmount);
+        //loan.loanStatus = LoanStatus.ACTIVE;
         emit FundTransferToBorrowerSuccessful(loan.borrower, loan.loanAmount);
     }
 
