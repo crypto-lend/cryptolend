@@ -233,7 +233,7 @@ contract LoanContract {
    function approveLoanRequest() public payable {
 
         require(msg.value >= loan.loanAmount, "Sufficient funds not transferred");
-        require(loan.loanStatus == LoanStatus.ACTIVE, "Incorrect loan status");
+        require(loan.loanStatus == LoanStatus.REQUEST, "Incorrect loan status");
 
         loan.lender = msg.sender;
         loan.loanStatus = LoanStatus.FUNDED;
