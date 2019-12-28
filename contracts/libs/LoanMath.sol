@@ -41,10 +41,11 @@ library LoanMath {
     }
 
     function calculateTotalLoanRepaymentAmount(uint256 principal, uint256 interestRate, uint256 platformFeeRate, uint256 duration) pure internal returns(uint256) {
-        uint256 totalRepayments = getTotalNumberOfRepayments(duration);
-        uint256 interest = (principal.mul(interestRate)).mul(totalRepayments.add(1)).div((10**DECIMAL_PLACES).mul(2));
-        uint256 fees = getPlatformFeeAmount(principal,platformFeeRate);
-        return principal.add(interest.add(fees));
+      uint256 totalRepayments = getTotalNumberOfRepayments(duration);
+      uint256 interest = (principal.mul(interestRate)).mul(totalRepayments.add(1)).div((10**DECIMAL_PLACES).mul(2));
+      uint256 fees = getPlatformFeeAmount(principal,platformFeeRate);
+      return principal.add(interest.add(fees));
+
     }
 
     function getTotalNumberOfRepayments(uint256 duration) pure internal returns(uint256 totalRepaymentsNumber) {
