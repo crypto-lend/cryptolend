@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  truffle:
+    build:
+      context: .
+    image: theupscale/finocial:0.0.1
+    command: truffle develop
+    tty: true
+    stdin_open: true
+
+  truffle-coverage:
+    #    uses built and tagged image above
+    image: theupscale/finocial:0.0.1
+    command: scripts/coverage_setup.sh

@@ -21,10 +21,9 @@
   },
   "homepage": "https://github.com/upscaletech/finocial.eth#readme",
   "dependencies": {
-    "ethereumjs-testrpc": "^6.0.3",
-    "global": "^4.4.0",
+    "make-license": "^0.5.1",
     "openzeppelin-solidity": "^2.3.0",
-    "truffle": "^5.1.11",
+    "solidity-coverage": "^0.6.4",
     "truffle-hdwallet-provider": "^1.0.13"
   }
 }
