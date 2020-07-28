@@ -26,7 +26,7 @@ A Makefile is provided for easy setup of the environment.
 
 Some pre-requisites are required in order to utilize the Makefile.
 
-`git clone https://github.com/upscaletech/finocial.eth.git  # clone this repository`
+`git clone https://github.com/crypto-lend/cryptolend.eth.git # clone this repository`
 
 From here you will be able to use make commands assuming npm is already installed.
 
