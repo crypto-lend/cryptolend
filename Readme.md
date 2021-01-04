@@ -1,8 +1,8 @@
-# Crypto-lend (finocial)
+# Ethloan
 
 [![Build Status](https://travis-ci.org/upscaletech/finocial.eth.svg?branch=master)](https://travis-ci.org/upscaletech/finocial)
 
-Finocial Protocol has been created to provide a secure, flexible, open source foundation for decentralized loan marketplace on the Ethereum blockchain (as of now). We provide the pieces necessary to create a decentralized lending exchange, including the requisite lending assets, clearing and collateral pool infrastructure, enabling third parties to build applications for lending.
+EthLoan Protocol has been created to provide a secure, flexible, open source foundation for decentralized loan marketplace on the Ethereum blockchain (as of now). We provide the pieces necessary to create a decentralized lending exchange, including the requisite lending assets, clearing and collateral pool infrastructure, enabling third parties to build applications for lending.
 
 Join our telegram community to interact with members of our dev staff and other contributors.
 
@@ -26,7 +26,7 @@ A Makefile is provided for easy setup of the environment.
 
 Some pre-requisites are required in order to utilize the Makefile.
 
-`git clone https://github.com/crypto-lend/cryptolend.eth.git # clone this repository`
+`git clone https://github.com/Crypto-lend/Ethloan.git # clone this repository`
 
 From here you will be able to use make commands assuming npm is already installed.
 
@@ -67,4 +67,4 @@ Want to hack on Finocial Protocol? Awesome!
 
 Finocial Protocol is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
-Ready to jump in? Check docs.finocial.com/#contributing.
+Ready to jump in? Check docs.Ethloan.com/#contributing.
