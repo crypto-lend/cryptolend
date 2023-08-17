@@ -1,8 +1,8 @@
-# Ethloan
+# Cryptolend
 
 [![Build Status](https://travis-ci.org/upscaletech/finocial.eth.svg?branch=master)](https://travis-ci.org/upscaletech/finocial)
 
-EthLoan Protocol has been created to provide a secure, flexible, open source foundation for decentralized loan marketplace on the Ethereum blockchain (as of now). We provide the pieces necessary to create a decentralized lending exchange, including the requisite lending assets, clearing and collateral pool infrastructure, enabling third parties to build applications for lending.
+EthLoan Protocol has been created to provide a secure, flexible, open-source foundation for a decentralized loan marketplace on the Ethereum blockchain (as of now). We provide the pieces necessary to create a decentralized lending exchange, including the requisite lending assets, clearing, and collateral pool infrastructure, enabling third parties to build applications for lending.
 
 Join our telegram community to interact with members of our dev staff and other contributors.
 
@@ -24,9 +24,9 @@ If you are running multiple versions of Node.js, consider using Node Version Man
 
 A Makefile is provided for easy setup of the environment.
 
-Some pre-requisites are required in order to utilize the Makefile.
+Some prerequisites are required in order to utilize the Makefile.
 
-`git clone https://github.com/Crypto-lend/Ethloan.git # clone this repository`
+`git clone https://github.com/Crypto-lend/Cryptolend.git # clone this repository`
 
 From here you will be able to use make commands assuming npm is already installed.
 
@@ -42,7 +42,7 @@ Assuming you have npm already, Install truffle
 
 ## Tests
 
-Start truffle and its development blockchain with
+Start Truffle and its development blockchain with
 
 `make start_console`
 
@@ -56,15 +56,15 @@ truffle(develop)> test
 
 ### Running tests with coverage enabled
 
-The most convenient way to run tests with coverage enabled is to run them with help of Docker orchestration. This ensures, that the coverage results will match the ones on Travis CI.
+The most convenient way to run tests with coverage enabled is to run them with the help of Docker orchestration. This ensures, that the coverage results will match the ones on Travis CI.
 
 We are working on it.
 
 
 ## Contribution
 
-Want to hack on Finocial Protocol? Awesome!
+Want to hack on Cryptolend? Awesome!
 
-Finocial Protocol is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
+Cryptolend Protocol is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
-Ready to jump in? Check docs.Ethloan.com/#contributing.
+Ready to jump in? Check docs.Cryptolend.com/#contributing.
