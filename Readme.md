@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/upscaletech/finocial.eth.svg?branch=master)](https://travis-ci.org/upscaletech/finocial)
 
-EthLoan Protocol has been created to provide a secure, flexible, open-source foundation for a decentralized loan marketplace on the Ethereum blockchain (as of now). We provide the pieces necessary to create a decentralized lending exchange, including the requisite lending assets, clearing, and collateral pool infrastructure, enabling third parties to build applications for lending.
+Cryptolend Protocol has been created to provide a secure, flexible, open-source foundation for a decentralized loan marketplace on the Ethereum blockchain (as of now). We provide the pieces necessary to create a decentralized lending exchange, including the requisite lending assets, clearing, and collateral pool infrastructure, enabling third parties to build applications for lending.
 
 Join our telegram community to interact with members of our dev staff and other contributors.
 
