@@ -65,6 +65,6 @@ We are working on it.
 
 Want to hack on Cryptolend? Awesome!
 
-Cryptolend Protocol is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
+Cryptolend is an Open Source project and we welcome contributions of all sorts. There are many ways to help, from reporting issues, contributing code, and helping us improve our community.
 
 Ready to jump in? Check docs.Cryptolend.com/#contributing.
